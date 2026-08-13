@@ -542,7 +542,8 @@
         function playWord(word) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(word);
+                // Usamos toLowerCase() para evitar que el sintetizador deletree palabras en mayúsculas (ej. WHO -> W-H-O)
+                const utterance = new SpeechSynthesisUtterance(word.toLowerCase());
                 utterance.lang = 'en-US';
                 utterance.rate = 0.85;
                 const avatarContainer = document.getElementById('leo-avatar-container');
@@ -568,7 +569,8 @@
             const cleanText = phraseText.replace(/<[^>]*>/g, '');
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(cleanText);
+                // Usamos toLowerCase() para que lea fluidamente la frase completa
+                const utterance = new SpeechSynthesisUtterance(cleanText.toLowerCase());
                 utterance.lang = 'en-US';
                 utterance.rate = 0.85;
                 const avatarContainer = document.getElementById('leo-avatar-container');
@@ -719,7 +721,7 @@
                 setTimeout(() => {
                     const noiseNode = audioCtx.createBufferSource();
                     const bufferSize = audioCtx.sampleRate * 1.5;
-                    const buffer = doc.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                     const data = buffer.getChannelData(0);
                     for (let i = 0; i < bufferSize; i++) {
                         data[i] = Math.random() * 2 - 1;
@@ -915,7 +917,6 @@
             el.style.textShadow = '0 6px 0 #b45309, 0 0 30px rgba(255,255,255,0.9)';
             el.innerHTML = `🔥 ${streak} IN A ROW!`;
             document.body.appendChild(el);
-        showComboFeedback(state.quizStreak);
             setTimeout(() => {
                 el.classList.replace('animate__tada', 'animate__fadeOutUp');
                 setTimeout(() => el.remove(), 1000);
